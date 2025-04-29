@@ -1,3 +1,6 @@
 [submodule "Software/openvisualizer"]
 	path = Software/openvisualizer
 	url = https://github.com/openwsn-berkeley/openvisualizer.git
+[submodule "Software/openwsn-fw"]
+	path = Software/openwsn-fw
+	url = https://github.com/mmontee/openwsn-fw.git
