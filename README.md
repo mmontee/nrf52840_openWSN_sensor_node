@@ -48,5 +48,21 @@ This project modifies openserial.c to execute functions as Uart messages are rec
 
 Nodes receive processed signal information and pass all data to the root node. The root node Uart output read over Uart and parsed within the teensy. </br>
 
-In coming uart messages are constructed within openserial.c using a set of termination characters and flags. </br>
+In coming uart messages are constructed within openserial.c using a set of termination characters and flags that are defined in openhdlc.c are shown below. </br>
+
+![alt text](images/hdlcFlags.png)</br>
+
+Messages must be proceeded by a HDLC_FLAG and begin with a valid flag that indicates a peticular type of message. The flags are located in openserial.h and are shown below. </br>
+
+![alt text](images/openserialFlags.png)</br>
+
+Messages are terminated with HDLC_FLAG.</br> 
+
+A message coming into openserial will have the form.</br>
+Ex. <HDLC_FLAG><SERFRAME_PC2MOTE_...><Data><HDLC_FLAG> </br>
+
+After a valid message is created it is passed to a switch that acts on the received <SERFRAME_PC2MOTE_...> calling it a cmdByte. This byte will index a certain action. Below we pass the incoming data as that action or do nothing if we are root. </br>
+
+![alt text](images/openserialRxHandle.png)</br>
+
 
