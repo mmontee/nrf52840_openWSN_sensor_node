@@ -65,4 +65,6 @@ After a valid message is created it is passed to a switch that acts on the recei
 
 ![alt text](images/openserialRxHandle.png)</br>
 
+Once that data is in the data bus it can be read my the uniject app that will create a UDP packet containing the data that will be passed over the network.  
+
 
