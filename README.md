@@ -9,13 +9,16 @@
 <h2>Introduction</h2>
 
 
- https://github.com/lifeparticle/Markdown-Cheatsheet
 
 
 
-This project's goal is to implement an wireless acoustic sensor network using the [XIAO-nrf52840 ](https://wiki.seeedstudio.com/XIAO_BLE/)  and openWSN. Acoustic signals samples are captured and processed using a [Teensy4.0](https://www.pjrc.com/store/teensy40.html)  and the [Teensy Audio Adaptor Board](https://www.pjrc.com/store/teensy3_audio.html) . Samples are stored on removable flash memory(SD card). The output of that processing is passed through the wireless network to a central "root" device for further processing.</br>
+This project's goal is to implement an wireless acoustic sensor network using the [XIAO-nrf52840](https://wiki.seeedstudio.com/XIAO_BLE/) and [openWSN](https://openwsn.org/). Acoustic signals samples are captured and processed using a [Teensy4.0](https://www.pjrc.com/store/teensy40.html)  and the [Teensy Audio Adaptor Board](https://www.pjrc.com/store/teensy3_audio.html) . Samples are stored on removable flash memory(SD card). The output of that processing is passed through the wireless network to a central "root" device for further processing.</br>
 
 
+
+<p align="center">
+<img src="images/networkAirt.png" border="1" width="600"/>
+</p>
 
 
 
@@ -36,11 +39,11 @@ A root node add a LTE-M modem in the form of a [Sequans communications Monarch 2
 ---
 </br>
 </br>
-<h2>Guide to OpenWSN on XIAO-nrf52840</h2>
+<h2>Guide for OpenWSN on XIAO-nrf52840</h2>
 
 Luckily the work has been done through openWSN's nrf52840-DK implementation that can be found [here](https://github.com/openwsn-berkeley/openwsn-fw/tree/develop_FW-893). </br>
 
-The nrf52840-DK is used to provide a method for programming and debugging the XIAO-nrf5280 dev board.</br>
+In this project the [nrf52840-DK](https://www.nordicsemi.com/Products/Development-hardware/nRF52840-DK) is used to provide a method for programming and debugging the XIAO-nrf5280 dev board.</br>
 
 This guide will step through the processes of:
 * Configuring the existing work for a new set of pins
@@ -50,7 +53,7 @@ This guide will step through the processes of:
 For this guide you are expected to have: </br>
 * XIAO-nrf52840 Development board </br>
 * Nordic Semi nrf52840-DK </br>
-* SEEED STUDIO EXPANSION BASE XIAO or the ability to solder small jumper wires to the XIAO-nrf52840 </br>
+* [SEEED STUDIO EXPANSION BASE XIAO](https://wiki.seeedstudio.com/Seeeduino-XIAO-Expansion-Board/) or the ability to solder small jumper wires to the XIAO-nrf52840 </br>
 
 ---
 </br>
