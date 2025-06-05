@@ -17,7 +17,7 @@ This project's goal is to implement an wireless acoustic sensor network using th
 
 
 <p align="center">
-<img src="images/networkAirt.png" border="1" width="600"/>
+<img src="images/networkAirt.png" border="1" width="1000"/>
 </p>
 
 
