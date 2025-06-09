@@ -6,6 +6,8 @@
 
 - [Guide for UART communication with openWSB on XIAO-nrf5280](#Guide-for-UART-communication-with-openWSB-on-XIAO-nrf5280)
 
+- [ADC Driver for nRF52 SAADC XIAO nRF52840](#ADC-Driver-for-nRF52-SAADC-XIAO nRF52840)
+
 <h2>Introduction</h2>
 
 
@@ -29,7 +31,7 @@ Every node consists for a custom PCB that interfaces the XIAO-nrf52840, Teensy b
 <img src="images/PCB_node.png" border="1" width="600"/>
 </p>
 
-A root node add a LTE-M modem in the form of a [Sequans communications Monarch 2 GM02SP Evaluation Kit](https://sequans.com/products/monarch-2-gm02sp-nektar-evk/) that is used to send data to a cental location.
+A root node adds an LTE-M modem in the form of a [Sequans communications Monarch 2 GM02SP Evaluation Kit](https://sequans.com/products/monarch-2-gm02sp-nektar-evk/) that is used to send data to a cental location.
 
 <p align="center">
 <img src="images/ROOT_node.png" border="1" border="1" width="600"/>
@@ -126,7 +128,7 @@ We accomplished created the necessary connetions using two methods. </br>
 
 2. Alternativly wire leads can be soldered to the XIAO-nrf5280's SWD pads. The wire leads can then be direclty connected to the nrf52850-DK as shown below.
 <p align="center">
-<img src="images/XIAO_wires.png" border="5" width="1000"/>
+<img src="images/XIAO_wires.png" border="5" width="1000" alt="A Nordic nRF52840-DK development board is connected to a small breadboard with a Seeed Studio XIAO-nRF52840 microcontroller using four colored jumper wires. The wires are attached to the SWD and power pins on the development board and lead to the corresponding pins on the XIAO module, which is mounted on the breadboard. The setup is placed on a plain white background, and the environment is well-lit with no visible text or labels. The scene is technical and instructional, showing a hardware programming connection." />
 </p>
 
 ---
@@ -186,7 +188,7 @@ Program -> Target - Connect J-Link, Then Target - Download 03oos_openwsn</br>
 </br>
 </br>
 
-<h2>Guide for UART communication with openWSB on XIAO-nrf5280</h2>
+<h1>Guide for UART communication with openWSB on XIAO-nrf5280</h1>
 
 This project modifies openserial.c to execute functions as UART messages are received. Nodes receive processed signal information and pass all data to the root node. The root node's UART output is parsed using a Teensy. </br>
 
@@ -219,3 +221,25 @@ After a valid message is parsed it is passed to a switch that acts on the receiv
 Once that data is in the data bus it can be read my the uniject app that will create a UDP packet containing the data that will be passed over the network.  
 
 
+<h1>ADC Driver for nRF52 SAADC XIAO nRF52840</h1>
+
+<h2>1. Overview</h2>
+
+This document describes a low-level driver for the nRF52 Successive-Approximation Analog-to-Digital Converter (SAADC) peripheral. The driver is designed for simplicity and ease of use, providing a blocking (synchronous) API for single-channel ADC conversions.
+
+It is specifically tailored with pin definitions corresponding to the analog pins on the **Seeed Studio XIAO nRF52840** board but can be adapted for other nRF52-based hardware.
+
+<h3>Key Features</h3>
+
+* **Easy Configuration:** Uses a single configuration structure (`adc_config_t`) to set all major parameters.
+* **Blocking Sampling:** The `adc_sample()` function waits for the conversion to complete before returning, simplifying application logic.
+* **Hardware Abstraction:** Maps XIAO nRF52840 pin names (A0-A5) to the correct nRF52 AIN inputs.
+* **Configurable Parameters:**
+    * Resolution (8, 10, 12, 14-bit)
+    * Hardware Oversampling (up to 256x)
+    * Reference Voltage (Internal 0.6V or VDD/4)
+    * Input Gain (1/6x to 4x)
+    * Acquisition Time (3µs to 40µs)
+* **Automatic Calibration:** Performs an automatic offset calibration during initialization to improve accuracy.
+
+---
