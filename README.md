@@ -1,44 +1,66 @@
-# nrf52840_openWSN_sensor_node</br>
+<h1> nrf52840_openWSN_sensor_node</h1></br>
 
-- [Introduction](#introduction)
+- [Project Overview](#Project-Overview)
+
+  - [Current Hardware Status](#Current-Hardware-Status)
 
 - [Guide for OpenWSN on XIAO-nrf52840](#Guide-for-OpenWSN-on-XIAO-nrf52840)
 
-- [Guide for UART communication with openWSB on XIAO-nrf5280](#Guide-for-UART-communication-with-openWSB-on-XIAO-nrf5280)
+  - [ART communication with openWSB on XIAO-nrf5280](#UART-communication-with-openWSB-on-XIAO-nrf5280)
 
-- [ADC Driver for nRF52 SAADC XIAO nRF52840](#ADC-Driver-for-nRF52-SAADC-XIAO-nRF52840)
+  - [ADC Driver for nRF52 SAADC XIAO nRF52840](#ADC-Driver-for-nRF52-SAADC-XIAO-nRF52840)
 
-- [OpenWSN ADC Reader Application](#OpenWSN-ADC-Reader-Application)
+  - [OpenWSN ADC Reader Application](#OpenWSN-ADC-Reader-Application)
 
+</br>
 
-<h2>Introduction</h2>
+---
+<h1>Project Overview</h1>
+The project's aim is to create a wireless acoustic sensor network using the <a href="https://wiki.seeedstudio.com/XIAO_BLE/">XIAO-nrf52840</a> and <a href="https://openwsn.org/">openWSN</a>. Acoustic signals are captured and processed by a <a href="https://www.pjrc.com/store/teensy40.html">Teensy4.0</a> in conjunction with the <a href="https://www.pjrc.com/store/teensy3_audio.html">Teensy Audio Adaptor Board</a>. These samples are saved to a removable SD card. The output of that processing is passed through the wireless network to a central "root" device. This root node does not perform sensing; instead, it passes the information to an LTE-M modem, which then uses MQTTto send the processed data to a cloud storage solution. 
+</br>
+</br>
 
-
-
-
-
-This project's goal is to implement an wireless acoustic sensor network using the [XIAO-nrf52840](https://wiki.seeedstudio.com/XIAO_BLE/) and [openWSN](https://openwsn.org/). Acoustic signals samples are captured and processed using a [Teensy4.0](https://www.pjrc.com/store/teensy40.html)  and the [Teensy Audio Adaptor Board](https://www.pjrc.com/store/teensy3_audio.html) . Samples are stored on removable flash memory(SD card). The output of that processing is passed through the wireless network to a central "root" device for further processing.</br>
-
-
+This project builds upon the foundation of the <a href="https://github.com/mmontee/West_Lab_Hydrophone_Data_Logger">"West_Lab_Hydrophone_Data_Logger"</a>. The initial objective was to integrate the nrf52840 into the existing hardware architecture. The longer-term goal is to migrate the signal processing tasks currently handled by the Teensy 4.0 onto the nrf52840. This consolidation of processing onto a single mote should yield significant power savings while also decreasing the complexity, size, and hardware cost of each sensor node. Currently the existing system relies on the Teensy Audio Adaptor Board for audio signal acquisition. A critical aspect of this transition will be to incorporate appropriate signal conditioning hardware. 
 
 <p align="center">
-<img src="images/networkAirt.png" border="1" width="1000"/>
+<img src="images/networkAirt.png" border="1" width="700"/>
 </p>
 
+<h3>Current Software Status</h3>
+
+Complete:
+* <strong>Modified Openserial Driver</strong>: The openserial driver has been adapted to enable UART communication between the Teensy and the nrf52840.
+* <strong>ADC Driver</strong>: A dedicated ADC driver has been developed.
+* <strong>ADC Application</strong>: A sample application has been created to demonstrate the functionality of the ADC driver. This application also serves as a foundation for implementing more advanced signal processing capabilities.
 
 
-Every node consists for a custom PCB that interfaces the XIAO-nrf52840, Teensy boards, RTC bettery, battery management board, and various I/O. </br>
+Incomplete:
+* <strong>Signal capture and processing on nrf52840</strong>: Expand ADC application to capture a time series of samples and subsequently process them. 
+
+<h3>Current Hardware Status</h3>
+Complete:
+
+* Every node consists for a custom PCB that interfaces the XIAO-nrf52840, Teensy boards, RTC bettery, battery management board, and various I/O. </br>
 
 
 <p align="center">
 <img src="images/PCB_node.png" border="1" width="600"/>
 </p>
 
-A root node adds an LTE-M modem in the form of a [Sequans communications Monarch 2 GM02SP Evaluation Kit](https://sequans.com/products/monarch-2-gm02sp-nektar-evk/) that is used to send data to a cental location.
+* A root node adds an LTE-M modem in the form of a [Sequans communications Monarch 2 GM02SP Evaluation Kit](https://sequans.com/products/monarch-2-gm02sp-nektar-evk/) that is used to send data to a cental location.
 
 <p align="center">
 <img src="images/ROOT_node.png" border="1" border="1" width="600"/>
 </p>
+
+* Shown below is the  "West_Lab_Hydrophone_Data_Logger" PCB modified to include the XIAO nrf52840.
+
+<p align="center">
+<img src="images/PCBwithMote.png" border="1" width="600"/>
+</p>
+Incomplete:
+
+* New PCB revision that incorporates appropriate signal conditioning hardware and removes the teensy4.0 and audio adapter board.
 
 
 ---
