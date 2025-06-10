@@ -1,5 +1,9 @@
 # Teensy Serial Reader
 
+IMPORTANT NOTE: This program has not been successfully tested with the LTE-M modem. As it stand the program correctly parses the openWSN serial stream. The project team currently does not have a working the modem for further testing.
+
+## Introduction
+
 This project implements a serial data reader for the Teensy 4.0 microcontroller. It reads incoming serial data, checks for specific keywords, and processes the data similarly to a Python script designed for serial communication.
 
 ## Project Structure

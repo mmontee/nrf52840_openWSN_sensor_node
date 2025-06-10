@@ -52,8 +52,8 @@ A critical aspect of the final transition will be to incorporate appropriate sig
 
 <h4>Incomplete:</h4>
 <ul>
-  <li><strong>Signal Capture and Processing on nRF52840</strong>: Expand the ADC application to capture and process a time series of samples directly on the microcontroller.</li>
-  <li><strong>Teensy4.0 openWSB output parse program</strong>: Imporive the Teensy side parsing program to parse out IDs and pass LTE-M modem [ID, data] pairs.</li>
+  <li><strong>Signal Capture and Processing on nRF52840</strong>: Expand the ADC application to capture and process a time series of samples directly on the XIAO nrf52840.</li>
+  <li><strong>Teensy4.0 openWSB output parse program</strong>: Procure new LTE-M modem and continue testing/development.</li>
 </ul>
 
 <h3 id="current-hardware-status">Current Hardware Status</h3>
