@@ -40,8 +40,3 @@ teensy-serial-reader
 - The Teensy reads incoming serial data byte by byte.
 - It checks for specific internal keywords and a user-defined keyword to process the data.
 - Detected IDs and their values are stored in a dictionary-like structure and displayed in the Serial Monitor.
-
-## Notes
-
-- Ensure that the serial communication settings match between the Teensy and the sending device.
-- Modify the internal keywords and user-defined keyword in the Arduino sketch as needed for your application.
