@@ -1,4 +1,4 @@
-<h1>nrf52840 openWSN sensor node</h1>
+<h1>nRF52840 OpenWSN Sensor Node</h1>
 
 <ul>
   <li><a href="#project-overview">Project Overview</a>
@@ -13,10 +13,9 @@
       <li><a href="#root-node">Root Node</a></li>
     </ul>
   </li>
-
   <li><a href="#guide-for-openwsn-on-xiao-nrf52840">Guide for OpenWSN on XIAO nRF52840</a>
     <ul>
-      <li><a href="#uart-communication-with-openwsn-on-xiao-nrf52840">UART communication with OpenWSN on XIAO nRF52840</a></li>
+      <li><a href="#uart-communication-with-openwsn-on-xiao-nrf52840">UART Communication with OpenWSN on XIAO nRF52840</a></li>
       <li><a href="#adc-driver-for-nrf52-saadc-xiao-nrf52840">ADC Driver for nRF52 SAADC (XIAO nRF52840)</a></li>
       <li><a href="#openwsn-adc-reader-application">OpenWSN ADC Reader Application</a></li>
     </ul>
@@ -27,10 +26,10 @@
 
 <h1 id="project-overview">Project Overview</h1>
 <p>
-This project builds upon the foundation of the <a href="https://github.com/mmontee/West_Lab_Hydrophone_Data_Logger">West_Lab_Hydrophone_Data_Logger</a>. The initial objective was to integrate the nRF52840 into the existing hardware architecture, with a longer-term goal of migrating all signal processing tasks from the Teensy 4.0 onto the nRF52840. This consolidation of processing onto a single microcontroller is expected to yield significant power savings while also decreasing the complexity, size, and hardware cost of each sensor node.
+This project builds upon the foundation of the <a href="https://github.com/mmontee/West_Lab_Hydrophone_Data_Logger">West_Lab_Hydrophone_Data_Logger</a>. The initial objective was to integrate the nRF52840 into the existing hardware architecture, with the long-term goal of migrating all signal processing tasks from the Teensy 4.0 to the nRF52840. This consolidation of processing onto a single microcontroller is expected to yield significant power savings while decreasing the complexity, size, and cost of each sensor node.
 </p>
 <p>
-The ultimate aim is to create a wireless acoustic sensor network using the <a href="https://wiki.seeedstudio.com/XIAO_BLE/">XIAO nRF52840</a> and <a href="https://openwsn.org/">OpenWSN</a>. In the current transitional phase, acoustic signals are captured and processed by a <a href="https://www.pjrc.com/store/teensy40.html">Teensy 4.0</a> with a <a href="https://www.pjrc.com/store/teensy3_audio.html">Teensy Audio Adaptor Board</a>, and samples are saved to an SD card. The output is passed through the wireless network to a central root node. This root node does not perform sensing; instead, it passes information to an LTE-M modem, which uses MQTT to send the processed data to a cloud storage solution.
+The ultimate aim is to create a wireless acoustic sensor network using the <a href="https://wiki.seeedstudio.com/XIAO_BLE/">XIAO nRF52840</a> and <a href="https://openwsn.org/">OpenWSN</a>. In the current transitional phase, a <a href="https://www.pjrc.com/store/teensy40.html">Teensy 4.0</a> with a <a href="https://www.pjrc.com/store/teensy3_audio.html">Teensy Audio Adaptor Board</a> captures and processes acoustic signals, and samples are saved to an SD card. The output is passed through the wireless network to a central root node. This root node does not perform sensing; instead, it passes information to an LTE-M modem, which uses MQTT to send the processed data to a cloud storage solution.
 </p>
 <p>
 A critical aspect of the final transition will be to incorporate appropriate signal conditioning hardware to replace the functionality of the Teensy Audio Adaptor Board.
@@ -44,42 +43,42 @@ A critical aspect of the final transition will be to incorporate appropriate sig
 
 <h4>Complete:</h4>
 <ul>
-  <li><strong>Hardware programming</strong>: Establish method to program the device with OpenWSN.</li>
-  <li><strong>Port OpenWSN to XIAO</strong>: Modify existing OpenWSN project for nRF52840-DK.</li>
-  <li><strong>Modified Openserial Driver</strong>: The openserial driver has been adapted to enable UART communication between the Teensy and the nRF52840.</li>
-  <li><strong>ADC Driver</strong>: A dedicated ADC driver has been developed for the nRF52840's SAADC peripheral.</li>
-  <li><strong>ADC Application</strong>: A sample application has been created to demonstrate the driver's functionality and provide a foundation for future signal processing work.</li>
+  <li><strong>Hardware Programming</strong>: Established a method to program the device with OpenWSN.</li>
+  <li><strong>Port OpenWSN to XIAO</strong>: Modified the existing OpenWSN project for the nRF52840-DK to support the XIAO.</li>
+  <li><strong>Modified Openserial Driver</strong>: Adapted the openserial driver to enable UART communication between the Teensy and the nRF52840.</li>
+  <li><strong>ADC Driver</strong>: Developed a dedicated ADC driver for the nRF52840's SAADC peripheral.</li>
+  <li><strong>ADC Application</strong>: Created a sample application to demonstrate the driver's functionality and provide a foundation for future signal processing work.</li>
 </ul>
 
 <h4>Incomplete:</h4>
 <ul>
   <li><strong>Signal Capture and Processing on nRF52840</strong>: Expand the ADC application to capture and process a time series of samples directly on the microcontroller.</li>
+  <li><strong>Teensy4.0 openWSB output parse program</strong>: Imporive the Teensy side parsing program to parse out IDs and pass LTE-M modem [ID, data] pairs.</li>
 </ul>
 
 <h3 id="current-hardware-status">Current Hardware Status</h3>
 <h4>Complete:</h4>
 <ul>
   <li>Each sensor node consists of a custom PCB that interfaces the XIAO nRF52840, Teensy boards, RTC battery, a battery management board, and various I/O.</li>
-
-  <li>A root node adds an LTE-M modem in the form of a <a href="https://sequans.com/products/monarch-2-gm02sp-nektar-evk/">Sequans Communications Monarch 2 GM02SP Evaluation Kit</a>, which is used to send data to a central location.</li>
-
+  <li>A root node adds an LTE-M modem in the form of a <a href="https://sequans.com/products/monarch-2-gm02sp-nektar-evk/">Sequans Communications Monarch 2 GM02SP Evaluation Kit</a>, which sends data to a central location.</li>
 </ul>
+
 <p align="center">
   <img src="images/PCB_node.png" alt="Custom PCB for the sensor node" border="1" width="600"/>
-  </br>
-  Figure above shows existing West Lab Hydrophone Data Logger.
+  <br>
+  The existing West Lab Hydrophone Data Logger PCB.
 </p>
 
 <p align="center">
   <img src="images/ROOT_node.png" alt="The root node with the LTE-M modem" border="1" width="600"/>
-  </br>
-  Figure above shows existing West Lab Hydrophone Data Logger with LTE-M modem.
+  <br>
+  The existing West Lab Hydrophone Data Logger with an LTE-M modem.
 </p>
-
 
 <ul>
   <li>Shown below is the "West_Lab_Hydrophone_Data_Logger" PCB modified to include the XIAO nRF52840.</li>
 </ul>
+
 <p align="center">
   <img src="images/PCBwithMote.png" alt="Original PCB modified to include the XIAO nRF52840" border="1" width="400"/>
 </p>
@@ -92,88 +91,43 @@ A critical aspect of the final transition will be to incorporate appropriate sig
 <h2 id="battery-life-analysis">Battery Life Analysis</h2>
  
 <ul>
-<li>This section uses average current consumption measurements made using a Joule Scope to estimate battery life.</li>
-<li>Current consumption measurements were generate by attaching ching the Joule Scope and allowing a device to run in a particular mode for >1min. Tee resulting statistical average current consumption generated by the Joules Scopes software was taken.</li>
+<li>This section uses average current consumption measurements made with a <a href="https://www.joulescope.com/">JouleScope</a> to estimate battery life.</li>
+<li>Current consumption measurements were generated by attaching the JouleScope and allowing a device to run in a particular mode for over one minute. The resulting statistical average current consumption generated by the JouleScope software was recorded.</li>
 </ul>
 
 <h3 id="data-logger-node">Data Logger Node</h3>
 
 <p align="center">
-  <img src="images/battwithnomote.png" alt="Plot of node battery life with XIAO nrf52840" border="1" width="800"/>
-  </br>
-  Figure above shows battery life estimates for the data logger with no XIAO nrf52840.
+  <img src="images/battwithnomote.png" alt="Plot of node battery life without XIAO nRF52840" border="1" width="800"/>
+  <br>
+  Battery life estimates for the data logger without the XIAO nRF52840.
 </p>
 
 <p align="center">
-  <img src="images/battwithmote.png" alt="Plot of node battery life with XIAO nrf52840" border="1" width="800"/>
-  </br>
-  Figure above shows battery life estimates for the data logger with a XIAO nrf52840.
+  <img src="images/battwithmote.png" alt="Plot of node battery life with XIAO nRF52840" border="1" width="800"/>
+  <br>
+  Battery life estimates for the data logger with the XIAO nRF52840.
 </p>
 
 <p align="center">
-  <img src="images/battmoteonly.png" alt="Plot of node battery life with XIAO nrf52840" border="1" width="800"/>
-  </br>
-  Figure above shows battery life estimates for the data logger with no Teensy4.0 or Teensy Audio Adaptor Board.
+  <img src="images/battmoteonly.png" alt="Plot of node battery life with only XIAO nRF52840" border="1" width="800"/>
+  <br>
+  Battery life estimates for a data logger with only the XIAO nRF52840 (Teensy 4.0 and Audio Adaptor Board removed).
 </p>
 
 <h3 id="root-node">Root Node</h3> 
 
 <p align="center">
-  <img src="images/battrootwithnoteensy.png" alt="Plot of node battery life with XIAO nrf52840" border="1" width="800"/>
-  </br>
-  Figure above shows battery life estimates for the root device with a Teensy4.0.
+  <img src="images/battrootwithnoteensy.png" alt="Plot of root node battery life without Teensy 4.0" border="1" width="800"/>
+  <br>
+  Battery life estimates for the root node without a Teensy 4.0.
 </p>
 
 <p align="center">
-  <img src="images/battrootwithteensy.png" alt="Plot of node battery life with XIAO nrf52840" border="1" width="800"/>
-  </br>
-  Figure above shows battery life estimates for the root device with no Teensy4.0.
+  <img src="images/battrootwithteensy.png" alt="Plot of root node battery life with Teensy 4.0" border="1" width="800"/>
+  <br>
+  Battery life estimates for the root node with a Teensy 4.0.
 </p>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <hr>
 
@@ -230,7 +184,7 @@ This guide will step through the processes of:
 
 <h3>Connecting the XIAO nRF52840 to the nRF52840-DK</h3>
 <p>
-Programming is done via the JTAG/SWD interface on the nRF52840-DK, which is exposed through the onboard "J-Link" debugger.
+Programming is done via the JTAG/SWD interface on the nRF52840-DK, which is exposed through the onboard J-Link debugger.
 </p>
 <ul>
   <li>Both boards must share a common ground reference.</li>
@@ -250,8 +204,8 @@ We created the necessary connections using two methods:
     <p align="center"><img src="images/XIAO_base.png" alt="XIAO nRF52840 on the expansion base" border="5" width="800"/></p>
   </li>
   <li>
-    <strong>Soldering wires directly:</strong> Alternatively, wire leads can be soldered to the XIAO nRF52840's SWD pads. The leads can then be directly connected to the nRF52840-DK as shown below.
-    <p align="center"><img src="images/XIAO_wires.png" alt="A Nordic nRF52840-DK development board is connected to a small breadboard with a Seeed Studio XIAO-nRF52840 microcontroller using four colored jumper wires. The wires are attached to the SWD and power pins on the development board and lead to the corresponding pins on the XIAO module, which is mounted on the breadboard. The setup is placed on a plain white background, and the environment is well-lit with no visible text or labels. The scene is technical and instructional, showing a hardware programming connection." border="5" width="800"/></p>
+    <strong>Soldering wires directly:</strong> Alternatively, wire leads can be soldered to the XIAO nRF52840's SWD pads. The leads can then be connected directly to the nRF52840-DK as shown below.
+    <p align="center"><img src="images/XIAO_wires.png" alt="A Nordic nRF52840-DK connected to a Seeed Studio XIAO nRF52840 via jumper wires for SWD programming." border="5" width="800"/></p>
   </li>
 </ol>
 
@@ -261,11 +215,11 @@ We created the necessary connections using two methods:
 <p>Two changes must be made to the firmware to configure it for the XIAO nRF52840 platform: the UART and LED pin assignments must be updated.</p>
 <ol>
   <li>
-    The UART pin assignments are found in <code>/bsp/uart.c</code>. The image below shows the correct values for the XIAO nRF52840.
+    The UART pin assignments are found in <code>bsp/uart.c</code>. The image below shows the correct values for the XIAO nRF52840.
     <p align="center"><img src="images/uartPins.png" alt="Code snippet showing UART pin assignments for XIAO nRF52840" border="5" width="600"/></p>
   </li>
   <li>
-    The LED pin assignments must be changed in <code>/bsp/leds.c</code>. The image below shows the correct values for the XIAO nRF52840.
+    The LED pin assignments must be changed in <code>bsp/leds.c</code>. The image below shows the correct values for the XIAO nRF52840.
     <p align="center"><img src="images/ledPins.png" alt="Code snippet showing LED pin assignments for XIAO nRF52840" border="5" width="600"/></p>
     Reference the schematic for LED pin assignments:
     <p align="center"><img src="images/ledMap.png" alt="Schematic showing the LED connections on the XIAO board" border="5" width="400"/></p>
@@ -306,10 +260,10 @@ Incoming UART messages are parsed within <code>openserial.c</code> using a set o
 </p>
 <p align="center">
   cmdBytes<br>
-  <img src="images/openserialFlags.png" alt="Code snippet of openserial command bytes" border="5"width="600" />
+  <img src="images/openserialFlags.png" alt="Code snippet of openserial command bytes" border="5" width="600"/>
 </p>
 <p>
-Valid messages must be preceded by an <code>HDLC_FLAG</code>, begin with a valid command byte, followed by the payload, and be terminated with a second <code>HDLC_FLAG</code>.
+Valid messages must be preceded by an <code>HDLC_FLAG</code>, begin with a valid command byte, contain the payload, and be terminated with a second <code>HDLC_FLAG</code>.
 </p>
 <p>
 A message coming into openserial should have the form:<br>
@@ -320,7 +274,7 @@ We send information into the node using the following format, where <code>'~'</c
 Example: <code>~D1234567890~</code>
 </p>
 <p>
-After a valid message is parsed, it is passed to a switch statement that acts on the received <code>cmdByte</code>. This byte will trigger a certain action. Below, we pass the incoming data as that action or do nothing if the node is the root.
+After a valid message is parsed, it is passed to a switch statement that acts on the received <code>cmdByte</code>. This byte triggers a specific action. Below, the code passes the incoming data as that action or does nothing if the node is the root.
 </p>
 <p align="center">
   <img src="images/openserialRxHandle.png" alt="Code snippet showing the openserial receive handler" border="5" width="1000"/>
@@ -478,7 +432,7 @@ typedef struct {
   <li><code>ADC_RESOLUTION_8BIT</code></li>
   <li><code>ADC_RESOLUTION_10BIT</code> (Common default)</li>
   <li><code>ADC_RESOLUTION_12BIT</code></li>
-  <li><code>ADC_RESOLUTION_14BIT</code> (Requires acquisition time &gt;= 10µs)</li>
+  <li><code>ADC_RESOLUTION_14BIT</code> (Requires acquisition time >= 10µs)</li>
 </ul>
 
 <h5><code>adc_oversample_t</code></h5>
