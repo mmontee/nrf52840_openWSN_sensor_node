@@ -7,7 +7,12 @@
       <li><a href="#current-hardware-status">Current Hardware Status</a></li>
     </ul>
   </li>
-  <li><a href="#battery-life-analysis">Battery Life Analysis</a></li>
+  <li><a href="#battery-life-analysis">Battery Life Analysis</a>
+    <ul>
+      <li><a href="#data-logger-node">Data Logger Node</a></li>
+      <li><a href="#root-node">Root Node</a></li>
+    </ul>
+  </li>
 
   <li><a href="#guide-for-openwsn-on-xiao-nrf52840">Guide for OpenWSN on XIAO nRF52840</a>
     <ul>
