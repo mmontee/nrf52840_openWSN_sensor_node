@@ -11,6 +11,7 @@
     <ul>
       <li><a href="#data-logger-node">Data Logger Node</a></li>
       <li><a href="#root-node">Root Node</a></li>
+      <li><a href="#conclusion">Conclusion</a></li>
     </ul>
   </li>
   <li><a href="#guide-for-openwsn-on-xiao-nrf52840">Guide for OpenWSN on XIAO nRF52840</a>
@@ -52,8 +53,8 @@ A critical aspect of the final transition will be to incorporate appropriate sig
 
 <h4>Incomplete:</h4>
 <ul>
-  <li><strong>Signal Capture and Processing on nRF52840</strong>: Expand the ADC application to capture and process a time series of samples directly on the XIAO nrf52840.</li>
-  <li><strong>Teensy4.0 openWSB output parse program</strong>: Procure new LTE-M modem and continue testing/development.</li>
+  <li><strong>Signal Capture and Processing on nRF52840</strong>: Expand the ADC application to capture and process a time series of samples directly on the XIAO nRF52840.</li>
+  <li><strong>Teensy 4.0 OpenWSN Output Parse Program</strong>: Procure a new LTE-M modem and continue testing/development.</li>
 </ul>
 
 <h3 id="current-hardware-status">Current Hardware Status</h3>
@@ -128,6 +129,13 @@ A critical aspect of the final transition will be to incorporate appropriate sig
   <br>
   Battery life estimates for the root node with a Teensy 4.0.
 </p>
+
+<h3 id="conclusion">Conclusion</h3> 
+
+<ul>
+  <li>It's obvious that adding the XIAO nRF52840 reduces battery life but adds wireless network functionality. However, at the normal operational duty cycle of 6.6% used in the field, there is a difference of only 3.9 days. As the duty cycle increases, the power consumption of the mote plays a smaller role in the overall power used. It is also clear that removing the Teensy offers significant improvements in battery life.</li>
+  <li>The hardware on the root node is not optimized for low-power operation. Both the Teensy and the modem are in an always-on state. If modifications were made to allow the Teensy to sleep when no data is available at the OpenWSN root, significant power savings could be realized. Additionally, the power to the modem could be switched off between transmissions.</li>
+</ul>
 
 <hr>
 
@@ -432,7 +440,7 @@ typedef struct {
   <li><code>ADC_RESOLUTION_8BIT</code></li>
   <li><code>ADC_RESOLUTION_10BIT</code> (Common default)</li>
   <li><code>ADC_RESOLUTION_12BIT</code></li>
-  <li><code>ADC_RESOLUTION_14BIT</code> (Requires acquisition time >= 10µs)</li>
+  <li><code>ADC_RESOLUTION_14BIT</code> (Requires acquisition time &ge; 10µs)</li>
 </ul>
 
 <h5><code>adc_oversample_t</code></h5>
@@ -465,49 +473,49 @@ typedef struct {
       <td><code>ADC_GAIN_1_6</code></td>
       <td>1/6x</td>
       <td>0 - 3.6V</td>
-      <td>0 - 6.0V (e.g., if VDD=3.3V -> 0-4.95V)</td>
+      <td>0 - 6.0V (e.g., if VDD=3.3V &rarr; 0-4.95V)</td>
     </tr>
     <tr>
       <td><code>ADC_GAIN_1_5</code></td>
       <td>1/5x</td>
       <td>0 - 3.0V</td>
-      <td>0 - 5.0V (e.g., if VDD=3.3V -> 0-4.125V)</td>
+      <td>0 - 5.0V (e.g., if VDD=3.3V &rarr; 0-4.125V)</td>
     </tr>
     <tr>
       <td><code>ADC_GAIN_1_4</code></td>
       <td>1/4x</td>
       <td>0 - 2.4V</td>
-      <td>0 - 4.0V (e.g., if VDD=3.3V -> 0-3.3V)</td>
+      <td>0 - 4.0V (e.g., if VDD=3.3V &rarr; 0-3.3V)</td>
     </tr>
     <tr>
       <td><code>ADC_GAIN_1_3</code></td>
       <td>1/3x</td>
       <td>0 - 1.8V</td>
-      <td>0 - 3.0V (e.g., if VDD=3.3V -> 0-2.475V)</td>
+      <td>0 - 3.0V (e.g., if VDD=3.3V &rarr; 0-2.475V)</td>
     </tr>
     <tr>
       <td><code>ADC_GAIN_1_2</code></td>
       <td>1/2x</td>
       <td>0 - 1.2V</td>
-      <td>0 - 2.0V (e.g., if VDD=3.3V -> 0-1.65V)</td>
+      <td>0 - 2.0V (e.g., if VDD=3.3V &rarr; 0-1.65V)</td>
     </tr>
     <tr>
       <td><code>ADC_GAIN_1</code></td>
       <td>1x</td>
       <td>0 - 0.6V</td>
-      <td>0 - 1.0V (e.g., if VDD=3.3V -> 0-0.825V)</td>
+      <td>0 - 1.0V (e.g., if VDD=3.3V &rarr; 0-0.825V)</td>
     </tr>
     <tr>
       <td><code>ADC_GAIN_2</code></td>
       <td>2x</td>
       <td>0 - 0.3V</td>
-      <td>0 - 0.5V (e.g., if VDD=3.3V -> 0-0.4125V)</td>
+      <td>0 - 0.5V (e.g., if VDD=3.3V &rarr; 0-0.4125V)</td>
     </tr>
     <tr>
       <td><code>ADC_GAIN_4</code></td>
       <td>4x</td>
       <td>0 - 0.15V</td>
-      <td>0 - 0.25V (e.g., if VDD=3.3V -> 0-0.206V)</td>
+      <td>0 - 0.25V (e.g., if VDD=3.3V &rarr; 0-0.206V)</td>
     </tr>
   </tbody>
 </table>
@@ -594,11 +602,11 @@ The application integrates with the OpenWSN kernel's <code>opentimers</code> ser
 
 <h4>Key Features</h4>
 <ul>
-  <li><strong>OpenWSN Integration</strong>: Built as a standard OpenWSN component that uses the kernel's timer service for scheduling.</li>
-  <li><strong>Periodic Sampling</strong>: Automatically reads the configured ADC channel every 5 seconds (<code>ADC_READER_PERIOD_MS</code>).</li>
-  <li><strong>Non-blocking API</strong>: Provides a simple, non-blocking function (<code>adcread_get_value()</code>) for other modules to retrieve the latest sensor data.</li>
-  <li><strong>Power Efficient</strong>: The application is designed not to run on the DAGroot to save energy on the most critical node in the network.</li>
-  <li><strong>Driver Abstraction</strong>: Uses the underlying <code>adc</code> peripheral driver, separating the application logic from the hardware-specific details.</li>
+  <li><strong>OpenWSN Integration</strong>: Built as a standard OpenWSN component that uses the kernel's timer service for scheduling.</li>
+  <li><strong>Periodic Sampling</strong>: Automatically reads the configured ADC channel every 5 seconds (<code>ADC_READER_PERIOD_MS</code>).</li>
+  <li><strong>Non-blocking API</strong>: Provides a simple, non-blocking function (<code>adcread_get_value()</code>) for other modules to retrieve the latest sensor data.</li>
+  <li><strong>Power Efficient</strong>: The application is designed not to run on the DAGroot to save energy on the most critical node in the network.</li>
+  <li><strong>Driver Abstraction</strong>: Uses the underlying <code>adc</code> peripheral driver, separating the application logic from the hardware-specific details.</li>
 </ul>
 
 <hr>
@@ -608,14 +616,14 @@ The application integrates with the OpenWSN kernel's <code>opentimers</code> ser
 
 <h4><code>void adcread_init(void)</code></h4>
 <ul>
-  <li><strong>Description</strong>: This function configures and initializes the underlying <code>adc</code> driver with static settings defined within <code>adcread.c</code>. It then creates and schedules a periodic timer that will trigger an ADC reading.</li>
-  <li><strong>Warning</strong>: This function must be called <em>after</em> <code>opentimers_init()</code> has been successfully executed.</li>
+  <li><strong>Description</strong>: This function configures and initializes the underlying <code>adc</code> driver with static settings defined within <code>adcread.c</code>. It then creates and schedules a periodic timer that will trigger an ADC reading.</li>
+  <li><strong>Warning</strong>: This function must be called <em>after</em> <code>opentimers_init()</code> has been successfully executed.</li>
 </ul>
 
 <h4><code>uint16_t adcread_get_value(void)</code></h4>
 <ul>
-  <li><strong>Description</strong>: This is a non-blocking function that immediately returns the most recent ADC value stored by the periodic timer task. It does not trigger a new ADC reading.</li>
-  <li><strong>Returns</strong>: A <code>uint16_t</code> representing the latest raw ADC conversion result.</li>
+  <li><strong>Description</strong>: This is a non-blocking function that immediately returns the most recent ADC value stored by the periodic timer task. It does not trigger a new ADC reading.</li>
+  <li><strong>Returns</strong>: A <code>uint16_t</code> representing the latest raw ADC conversion result.</li>
 </ul>
 
 <hr>
@@ -631,10 +639,10 @@ Unlike the driver, the application's configuration is hard-coded within the <cod
 // Statically defined configuration within adcread.c
 adcread_vars.adc_config.resolution = ADC_RESOLUTION_12BIT;
 adcread_vars.adc_config.oversample = ADC_OVERSAMPLE_DISABLED;
-adcread_vars.adc_config.reference  = ADC_REFERENCE_INTERNAL; // 0.6V reference
-adcread_vars.adc_config.gain       = ADC_GAIN_1_6;          // Input range = 0.6V / (1/6) = 3.6V
-adcread_vars.adc_config.acq_time   = ADC_ACQTIME_10US;
-adcread_vars.adc_config.pin        = ADC_PIN_A0;             // Reads from XIAO pin A0
+adcread_vars.adc_config.reference  = ADC_REFERENCE_INTERNAL; // 0.6V reference
+adcread_vars.adc_config.gain       = ADC_GAIN_1_6;           // Input range = 0.6V / (1/6) = 3.6V
+adcread_vars.adc_config.acq_time   = ADC_ACQTIME_10US;
+adcread_vars.adc_config.pin        = ADC_PIN_A0;             // Reads from XIAO pin A0
 </code></pre>
 
 <h4>Sampling Period</h4>
@@ -658,17 +666,17 @@ Call <code>adcread_init()</code> from the main system initialization function (e
 #include "adcread.h"
 
 void openwsn_init(void) {
-    // ... other initializations
-    board_init();
-    scheduler_init();
-    opentimers_init();
-    // ... other initializations
+    // ... other initializations
+    board_init();
+    scheduler_init();
+    opentimers_init();
+    // ... other initializations
 
-    // Initialize the ADC reader application
-    adcread_init();
+    // Initialize the ADC reader application
+    adcread_init();
 
-    // ... more initializations
-    scheduler_start();
+    // ... more initializations
+    scheduler_start();
 }
 </code></pre>
 
@@ -681,14 +689,14 @@ Other application modules (e.g., a data packet creation module like `C6T` or a c
 #include "adcread.h"
 
 void send_sensor_data_task(void) {
-    uint16_t sensor_value;
+    uint16_t sensor_value;
 
-    // Get the latest value from the ADC reader app
-    sensor_value = adcread_get_value();
+    // Get the latest value from the ADC reader app
+    sensor_value = adcread_get_value();
 
-    // Now, 'sensor_value' can be added to a packet payload
-    // to be sent over the 6LoWPAN network.
-    // ...
+    // Now, 'sensor_value' can be added to a packet payload
+    // to be sent over the 6LoWPAN network.
+    // ...
 }
 </code></pre>
 
@@ -704,7 +712,6 @@ For error logging via <code>openserial_printLog</code>, ensure that <code>COMPON
 For certain applications, you might need to capture a rapid burst of samples. The following method uses a <strong>blocking loop</strong> to monopolize the CPU and capture samples as fast as the hardware allows, without yielding control to the OpenWSN scheduler.
 </p>
 
-
 <p>
     Using a blocking loop in a cooperative OS like OpenWSN is dangerous and should be handled with extreme care.
 </p>
@@ -713,7 +720,6 @@ For certain applications, you might need to capture a rapid burst of samples. Th
     <li><b>Network Instability</b>: If the total time spent in the blocking loop is longer than a network timeslot (typically a few milliseconds), the node will fail to communicate. This can cause it to lose synchronization with the network, leading to packet loss or complete disconnection.</li>
     <li><b>When to Use</b>: This method is only acceptable for <strong>very short bursts</strong> where the total capture time is guaranteed to be minimal (e.g., less than one millisecond). For any longer duration, a non-blocking, task-based approach is required to maintain system stability.</li>
 </ul>
-
 
 <h4>Capturing a Burst with a Blocking Loop</h4>
 <p>This is achieved by creating a function that enters a tight `for` loop, calling `adc_sample()` in each iteration.</p>
@@ -811,5 +817,3 @@ void _adcread_process_task_cb(void) {
 
     // For debugging, you could print the results
     // openserial_printf("Burst processed: Avg=%d, Min=%d, Max=%d\r\n", average_val, min_val, max_val);
-}
-</code></pre>
