@@ -594,11 +594,11 @@ The application integrates with the OpenWSN kernel's <code>opentimers</code> ser
 
 <h4>Key Features</h4>
 <ul>
-  <li><strong>OpenWSN Integration</strong>: Built as a standard OpenWSN component that uses the kernel's timer service for scheduling.</li>
-  <li><strong>Periodic Sampling</strong>: Automatically reads the configured ADC channel every 5 seconds (<code>ADC_READER_PERIOD_MS</code>).</li>
-  <li><strong>Non-blocking API</strong>: Provides a simple, non-blocking function (<code>adcread_get_value()</code>) for other modules to retrieve the latest sensor data.</li>
-  <li><strong>Power Efficient</strong>: The application is designed not to run on the DAGroot to save energy on the most critical node in the network.</li>
-  <li><strong>Driver Abstraction</strong>: Uses the underlying <code>adc</code> peripheral driver, separating the application logic from the hardware-specific details.</li>
+  <li><strong>OpenWSN Integration</strong>: Built as a standard OpenWSN component that uses the kernel's timer service for scheduling.</li>
+  <li><strong>Periodic Sampling</strong>: Automatically reads the configured ADC channel every 5 seconds (<code>ADC_READER_PERIOD_MS</code>).</li>
+  <li><strong>Non-blocking API</strong>: Provides a simple, non-blocking function (<code>adcread_get_value()</code>) for other modules to retrieve the latest sensor data.</li>
+  <li><strong>Power Efficient</strong>: The application is designed not to run on the DAGroot to save energy on the most critical node in the network.</li>
+  <li><strong>Driver Abstraction</strong>: Uses the underlying <code>adc</code> peripheral driver, separating the application logic from the hardware-specific details.</li>
 </ul>
 
 <hr>
@@ -608,14 +608,14 @@ The application integrates with the OpenWSN kernel's <code>opentimers</code> ser
 
 <h4><code>void adcread_init(void)</code></h4>
 <ul>
-  <li><strong>Description</strong>: This function configures and initializes the underlying <code>adc</code> driver with static settings defined within <code>adcread.c</code>. It then creates and schedules a periodic timer that will trigger an ADC reading.</li>
-  <li><strong>Warning</strong>: This function must be called <em>after</em> <code>opentimers_init()</code> has been successfully executed.</li>
+  <li><strong>Description</strong>: This function configures and initializes the underlying <code>adc</code> driver with static settings defined within <code>adcread.c</code>. It then creates and schedules a periodic timer that will trigger an ADC reading.</li>
+  <li><strong>Warning</strong>: This function must be called <em>after</em> <code>opentimers_init()</code> has been successfully executed.</li>
 </ul>
 
 <h4><code>uint16_t adcread_get_value(void)</code></h4>
 <ul>
-  <li><strong>Description</strong>: This is a non-blocking function that immediately returns the most recent ADC value stored by the periodic timer task. It does not trigger a new ADC reading.</li>
-  <li><strong>Returns</strong>: A <code>uint16_t</code> representing the latest raw ADC conversion result.</li>
+  <li><strong>Description</strong>: This is a non-blocking function that immediately returns the most recent ADC value stored by the periodic timer task. It does not trigger a new ADC reading.</li>
+  <li><strong>Returns</strong>: A <code>uint16_t</code> representing the latest raw ADC conversion result.</li>
 </ul>
 
 <hr>
@@ -631,10 +631,10 @@ Unlike the driver, the application's configuration is hard-coded within the <cod
 // Statically defined configuration within adcread.c
 adcread_vars.adc_config.resolution = ADC_RESOLUTION_12BIT;
 adcread_vars.adc_config.oversample = ADC_OVERSAMPLE_DISABLED;
-adcread_vars.adc_config.reference  = ADC_REFERENCE_INTERNAL; // 0.6V reference
-adcread_vars.adc_config.gain       = ADC_GAIN_1_6;          // Input range = 0.6V / (1/6) = 3.6V
-adcread_vars.adc_config.acq_time   = ADC_ACQTIME_10US;
-adcread_vars.adc_config.pin        = ADC_PIN_A0;             // Reads from XIAO pin A0
+adcread_vars.adc_config.reference  = ADC_REFERENCE_INTERNAL; // 0.6V reference
+adcread_vars.adc_config.gain       = ADC_GAIN_1_6;          // Input range = 0.6V / (1/6) = 3.6V
+adcread_vars.adc_config.acq_time   = ADC_ACQTIME_10US;
+adcread_vars.adc_config.pin        = ADC_PIN_A0;             // Reads from XIAO pin A0
 </code></pre>
 
 <h4>Sampling Period</h4>
@@ -658,17 +658,17 @@ Call <code>adcread_init()</code> from the main system initialization function (e
 #include "adcread.h"
 
 void openwsn_init(void) {
-    // ... other initializations
-    board_init();
-    scheduler_init();
-    opentimers_init();
-    // ... other initializations
+    // ... other initializations
+    board_init();
+    scheduler_init();
+    opentimers_init();
+    // ... other initializations
 
-    // Initialize the ADC reader application
-    adcread_init();
+    // Initialize the ADC reader application
+    adcread_init();
 
-    // ... more initializations
-    scheduler_start();
+    // ... more initializations
+    scheduler_start();
 }
 </code></pre>
 
@@ -681,14 +681,14 @@ Other application modules (e.g., a data packet creation module like `C6T` or a c
 #include "adcread.h"
 
 void send_sensor_data_task(void) {
-    uint16_t sensor_value;
+    uint16_t sensor_value;
 
-    // Get the latest value from the ADC reader app
-    sensor_value = adcread_get_value();
+    // Get the latest value from the ADC reader app
+    sensor_value = adcread_get_value();
 
-    // Now, 'sensor_value' can be added to a packet payload
-    // to be sent over the 6LoWPAN network.
-    // ...
+    // Now, 'sensor_value' can be added to a packet payload
+    // to be sent over the 6LoWPAN network.
+    // ...
 }
 </code></pre>
 
@@ -696,3 +696,120 @@ void send_sensor_data_task(void) {
 <p>
 For error logging via <code>openserial_printLog</code>, ensure that <code>COMPONENT_ADCREAD</code> is defined in the <code>opendefs.h</code> file alongside other component IDs.
 </p>
+
+<hr>
+
+<h3>5. Advanced Usage: Time-Series Sampling (Blocking Method)</h3>
+<p>
+For certain applications, you might need to capture a rapid burst of samples. The following method uses a <strong>blocking loop</strong> to monopolize the CPU and capture samples as fast as the hardware allows, without yielding control to the OpenWSN scheduler.
+</p>
+
+
+<p>
+    Using a blocking loop in a cooperative OS like OpenWSN is dangerous and should be handled with extreme care.
+</p>
+<ul>
+    <li><b>Processor Hogging</b>: The loop will prevent <b>all</b> other tasks from running, including the OpenWSN scheduler and the 6TiSCH network stack.</li>
+    <li><b>Network Instability</b>: If the total time spent in the blocking loop is longer than a network timeslot (typically a few milliseconds), the node will fail to communicate. This can cause it to lose synchronization with the network, leading to packet loss or complete disconnection.</li>
+    <li><b>When to Use</b>: This method is only acceptable for <strong>very short bursts</strong> where the total capture time is guaranteed to be minimal (e.g., less than one millisecond). For any longer duration, a non-blocking, task-based approach is required to maintain system stability.</li>
+</ul>
+
+
+<h4>Capturing a Burst with a Blocking Loop</h4>
+<p>This is achieved by creating a function that enters a tight `for` loop, calling `adc_sample()` in each iteration.</p>
+
+<p><strong>1. Define buffer and state variables:</strong><br>
+First, define the buffer size in <code>adcread.c</code> and add necessary state variables to `adcread_vars_t`.</p>
+<pre><code class="language-c">
+// adcread.c
+#define ADC_BURST_BUFFER_SIZE 256 // Capture 256 samples per burst
+
+typedef struct {
+    opentimers_id_t timer_id;
+    uint16_t        latest_adc_value;
+    adc_config_t    adc_config;
+    bool            initialized;
+    // --- New variables for burst mode ---
+    uint16_t        burst_buffer[ADC_BURST_BUFFER_SIZE]; // Buffer for samples
+    bool            burst_in_progress;                   // Flag to prevent re-entrant calls
+} adcread_vars_t;
+</code></pre>
+
+<p><strong>2. Create the blocking capture function:</strong><br>
+This function will contain the blocking loop. After the capture is complete, it schedules a separate, non-blocking task to process the data, which is a safer way to handle potentially long computations.</p>
+<pre><code class="language-c">
+// adcread.c -- function prototypes
+void _adcread_process_task_cb(void); // Task to process data after capture
+void adcread_capture_burst_blocking(void); // Public function to initiate a burst
+
+// Public function with the blocking capture loop
+void adcread_capture_burst_blocking(void) {
+    if (!adcread_vars.initialized || adcread_vars.burst_in_progress) {
+        return; // Exit if not ready or another burst is active
+    }
+    adcread_vars.burst_in_progress = true;
+
+    // Stop the periodic timer to prevent interference
+    opentimers_stop(adcread_vars.timer_id);
+
+    // --- START OF BLOCKING SECTION ---
+    // This loop takes full control of the CPU. No other tasks will run.
+    for (uint16_t i = 0; i < ADC_BURST_BUFFER_SIZE; i++) {
+        adc_sample(&adcread_vars.burst_buffer[i]);
+    }
+    // --- END OF BLOCKING SECTION ---
+
+    // Now that the time-critical capture is done, schedule a
+    // non-blocking task to process the data.
+    scheduler_push_task(_adcread_process_task_cb, TASKPRIO_ADC);
+
+    adcread_vars.burst_in_progress = false;
+
+    // Restart the periodic timer for normal operation
+    opentimers_scheduleIn(
+        adcread_vars.timer_id,
+        ADC_READER_PERIOD_MS,
+        TIME_MS,
+        TIMER_PERIODIC,
+        _adcread_timer_cb
+    );
+}
+</code></pre>
+
+<h4>On-Mote Data Processing</h4>
+<p>
+Sending a large buffer of raw samples over the network is inefficient. Processing the data on the mote first and transmitting only the result reduces network traffic and saves energy. The `_adcread_process_task_cb` function is the ideal place for this computation, as it runs as a standard, non-blocking OpenWSN task.
+</p>
+
+<p><strong>Example Processing Task:</strong></p>
+<pre><code class="language-c">
+// adcread.c -- processing task
+void _adcread_process_task_cb(void) {
+    uint32_t sum = 0;
+    uint16_t min_val = 0xFFFF;
+    uint16_t max_val = 0x0000;
+
+    // Iterate through the collected samples
+    for (int i = 0; i < ADC_BURST_BUFFER_SIZE; i++) {
+        uint16_t sample = adcread_vars.burst_buffer[i];
+        sum += sample;
+
+        if (sample < min_val) {
+            min_val = sample;
+        }
+        if (sample > max_val) {
+            max_val = sample;
+        }
+    }
+
+    // Calculate the average
+    uint16_t average_val = (uint16_t)(sum / ADC_BURST_BUFFER_SIZE);
+
+    // Store the processed result in the main variable
+    // This makes it available via the standard adcread_get_value() function
+    adcread_vars.latest_adc_value = average_val;
+
+    // For debugging, you could print the results
+    // openserial_printf("Burst processed: Avg=%d, Min=%d, Max=%d\r\n", average_val, min_val, max_val);
+}
+</code></pre>
