@@ -132,9 +132,20 @@ A critical aspect of the final transition will be to incorporate appropriate sig
 
 <h3 id="conclusion">Conclusion</h3> 
 
+<p>The integration of the XIAO nRF52840 wireless mote introduces a significant power cost, primarily during idle periods.</p>
 <ul>
-  <li>It's obvious that adding the XIAO nRF52840 reduces battery life but adds wireless network functionality. However, at the normal operational duty cycle of 6.6% used in the field, there is a difference of only 3.9 days. As the duty cycle increases, the power consumption of the mote plays a smaller role in the overall power used. It is also clear that removing the Teensy offers significant improvements in battery life.</li>
-  <li>The hardware on the root node is not optimized for low-power operation. Both the Teensy and the modem are in an always-on state. If modifications were made to allow the Teensy to sleep when no data is available at the OpenWSN root, significant power savings could be realized. Additionally, the power to the modem could be switched off between transmissions.</li>
+    <li><strong>Impact at Operational Duty Cycle:</strong> At the target operational duty cycle of 6.6%, adding the nRF52840 reduces the battery life from 33.4 days to 30.0 days. This <strong>loss of only 3.4 days</strong> is a reasonable trade-off for gaining wireless mesh networking capabilities.</li>
+    <li><strong>Idle Power is Key:</strong> The nRF52840's idle power consumption is its largest drawback. At a 0% duty cycle, its presence cuts the node's standby time by more than half, from 347 days to 149 days.</li>
+    <li><strong>High-Duty Cycle Operation:</strong> As the data recording frequency increases, the power consumption of the Teensy processor becomes the dominant factor, and the relative impact of the nRF52840 diminishes.</li>
+    <li><strong>Ultra-Low Power Potential:</strong> A simplified sensor node consisting of only the XIAO nRF52840 demonstrates the potential for extremely long-term deployments, lasting an estimated <strong>260 days</strong> on the same 10,000 mAh battery.</li>
+</ul>
+
+<h4>Root Node: Designed for Function over Efficiency</h4>
+<p>The Root Node hardware is configured for constant availability and processing power rather than battery longevity. Its battery life is extremely limited.</p>
+<ul>
+    <li><strong>Primary Power Drain:</strong> The largest power consumers are the always-on LTE modem and the Teensy processor. A base configuration with just the modem and nRF52840 lasts only <strong>5.8 days</strong>.</li>
+    <li><strong>Teensy's High Cost:</strong> Adding the always-on Teensy for data processing is the single largest power draw, reducing the battery life by over 70% to just <strong>1.7 days</strong>.</li>
+    <li><strong>Recommendations:</strong> For any practical deployment, the Root Node requires a continuous power source (e.g., mains or solar). Significant power savings could be achieved through future hardware and software revisions, such as implementing a sleep mode for the Teensy and power-cycling the LTE modem between scheduled transmissions.</li>
 </ul>
 
 <hr>
