@@ -1,4 +1,4 @@
-<h1>nrf52840_openWSN_sensor_node</h1>
+<h1>nrf52840 openWSN sensor node</h1>
 
 <ul>
   <li><a href="#project-overview">Project Overview</a>
@@ -7,6 +7,8 @@
       <li><a href="#current-hardware-status">Current Hardware Status</a></li>
     </ul>
   </li>
+  <li><a href="#battery-life-analysis">Battery Life Analysis</a></li>
+
   <li><a href="#guide-for-openwsn-on-xiao-nrf52840">Guide for OpenWSN on XIAO nRF52840</a>
     <ul>
       <li><a href="#uart-communication-with-openwsn-on-xiao-nrf52840">UART communication with OpenWSN on XIAO nRF52840</a></li>
@@ -34,8 +36,11 @@ A critical aspect of the final transition will be to incorporate appropriate sig
 </p>
 
 <h3 id="current-software-status">Current Software Status</h3>
+
 <h4>Complete:</h4>
 <ul>
+  <li><strong>Hardware programming</strong>: Establish method to program the device with OpenWSN.</li>
+  <li><strong>Port OpenWSN to XIAO</strong>: Modify existing OpenWSN project for nRF52840-DK.</li>
   <li><strong>Modified Openserial Driver</strong>: The openserial driver has been adapted to enable UART communication between the Teensy and the nRF52840.</li>
   <li><strong>ADC Driver</strong>: A dedicated ADC driver has been developed for the nRF52840's SAADC peripheral.</li>
   <li><strong>ADC Application</strong>: A sample application has been created to demonstrate the driver's functionality and provide a foundation for future signal processing work.</li>
@@ -50,29 +55,104 @@ A critical aspect of the final transition will be to incorporate appropriate sig
 <h4>Complete:</h4>
 <ul>
   <li>Each sensor node consists of a custom PCB that interfaces the XIAO nRF52840, Teensy boards, RTC battery, a battery management board, and various I/O.</li>
+
+  <li>A root node adds an LTE-M modem in the form of a <a href="https://sequans.com/products/monarch-2-gm02sp-nektar-evk/">Sequans Communications Monarch 2 GM02SP Evaluation Kit</a>, which is used to send data to a central location.</li>
+
 </ul>
 <p align="center">
   <img src="images/PCB_node.png" alt="Custom PCB for the sensor node" border="1" width="600"/>
+  </br>
+  Figure above shows existing West Lab Hydrophone Data Logger.
 </p>
 
-<ul>
-  <li>A root node adds an LTE-M modem in the form of a <a href="https://sequans.com/products/monarch-2-gm02sp-nektar-evk/">Sequans Communications Monarch 2 GM02SP Evaluation Kit</a>, which is used to send data to a central location.</li>
-</ul>
 <p align="center">
   <img src="images/ROOT_node.png" alt="The root node with the LTE-M modem" border="1" width="600"/>
+  </br>
+  Figure above shows existing West Lab Hydrophone Data Logger with LTE-M modem.
+</p>
 </p>
 
 <ul>
   <li>Shown below is the "West_Lab_Hydrophone_Data_Logger" PCB modified to include the XIAO nRF52840.</li>
 </ul>
 <p align="center">
-  <img src="images/PCBwithMote.png" alt="Original PCB modified to include the XIAO nRF52840" border="1" width="600"/>
+  <img src="images/PCBwithMote.png" alt="Original PCB modified to include the XIAO nRF52840" border="1" width="400"/>
 </p>
 
 <h4>Incomplete:</h4>
 <ul>
   <li>A new PCB revision that incorporates signal conditioning hardware and removes the Teensy 4.0 and its audio adapter board.</li>
 </ul>
+
+<h2 id="battery-life-analysis">Battery Life Analysis</h2>
+ 
+
+<p align="center">
+  <img src="images/battwithnomote.png" alt="Plot of node battery life with XIAO nrf52840" border="1" width="800"/>
+</p>
+
+
+<p align="center">
+  <img src="images/battwithmote.png" alt="Plot of node battery life with XIAO nrf52840" border="1" width="800"/>
+</p>
+
+<p align="center">
+  <img src="images/battmoteonly.png" alt="Plot of node battery life with XIAO nrf52840" border="1" width="800"/>
+</p>
+
+<p align="center">
+  <img src="images/battrootwithnoteensy.png" alt="Plot of node battery life with XIAO nrf52840" border="1" width="800"/>
+</p>
+
+<p align="center">
+  <img src="images/battrootwithteensy.png" alt="Plot of node battery life with XIAO nrf52840" border="1" width="800"/>
+</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <hr>
 
@@ -103,7 +183,7 @@ This guide will step through the processes of:
   <li>
     <strong>Install Segger Embedded Studio for ARM (Legacy) V6.30.</strong><br>
     <a href="https://www.segger.com/downloads/embedded-studio/#ESforARM">https://www.segger.com/downloads/embedded-studio/#ESforARM</a>
-    <p align="center"><img src="images/seggerIDE.png" alt="Segger Embedded Studio download page" border="1" width="1000"/></p>
+    <p align="center"><img src="images/seggerIDE.png" alt="Segger Embedded Studio download page" border="1" width="800"/></p>
   </li>
   <li>
     <strong>Clone the OpenWSN firmware repository:</strong><br>
@@ -121,7 +201,7 @@ This guide will step through the processes of:
   <li>
     <strong>Open the project file:</strong> <code>nrf52840_dk.emProject</code><br>
     The project should open in the Segger Embedded Studio IDE installed in the first step.
-    <p align="center"><img src="images/seg_Land.png" alt="OpenWSN project loaded in Segger Embedded Studio" border="1" width="1000"/></p>
+    <p align="center"><img src="images/seg_Land.png" alt="OpenWSN project loaded in Segger Embedded Studio" border="1" width="800"/></p>
   </li>
 </ol>
 
@@ -146,11 +226,11 @@ We created the necessary connections using two methods:
 <ol>
   <li>
     <strong>Using the "Expansion Board Base for XIAO":</strong> This board provides pogo pin contacts for the XIAO nRF52840's SWD pads, simplifying the connection process.
-    <p align="center"><img src="images/XIAO_base.png" alt="XIAO nRF52840 on the expansion base" border="5" width="1000"/></p>
+    <p align="center"><img src="images/XIAO_base.png" alt="XIAO nRF52840 on the expansion base" border="5" width="800"/></p>
   </li>
   <li>
     <strong>Soldering wires directly:</strong> Alternatively, wire leads can be soldered to the XIAO nRF52840's SWD pads. The leads can then be directly connected to the nRF52840-DK as shown below.
-    <p align="center"><img src="images/XIAO_wires.png" alt="A Nordic nRF52840-DK development board is connected to a small breadboard with a Seeed Studio XIAO-nRF52840 microcontroller using four colored jumper wires. The wires are attached to the SWD and power pins on the development board and lead to the corresponding pins on the XIAO module, which is mounted on the breadboard. The setup is placed on a plain white background, and the environment is well-lit with no visible text or labels. The scene is technical and instructional, showing a hardware programming connection." border="5" width="1000"/></p>
+    <p align="center"><img src="images/XIAO_wires.png" alt="A Nordic nRF52840-DK development board is connected to a small breadboard with a Seeed Studio XIAO-nRF52840 microcontroller using four colored jumper wires. The wires are attached to the SWD and power pins on the development board and lead to the corresponding pins on the XIAO module, which is mounted on the breadboard. The setup is placed on a plain white background, and the environment is well-lit with no visible text or labels. The scene is technical and instructional, showing a hardware programming connection." border="5" width="800"/></p>
   </li>
 </ol>
 
@@ -161,13 +241,13 @@ We created the necessary connections using two methods:
 <ol>
   <li>
     The UART pin assignments are found in <code>/bsp/uart.c</code>. The image below shows the correct values for the XIAO nRF52840.
-    <p align="center"><img src="images/uartPins.png" alt="Code snippet showing UART pin assignments for XIAO nRF52840" border="5"/></p>
+    <p align="center"><img src="images/uartPins.png" alt="Code snippet showing UART pin assignments for XIAO nRF52840" border="5" width="600"/></p>
   </li>
   <li>
     The LED pin assignments must be changed in <code>/bsp/leds.c</code>. The image below shows the correct values for the XIAO nRF52840.
-    <p align="center"><img src="images/ledPins.png" alt="Code snippet showing LED pin assignments for XIAO nRF52840" border="5"/></p>
+    <p align="center"><img src="images/ledPins.png" alt="Code snippet showing LED pin assignments for XIAO nRF52840" border="5" width="600"/></p>
     Reference the schematic for LED pin assignments:
-    <p align="center"><img src="images/ledMap.png" alt="Schematic showing the LED connections on the XIAO board" border="5"/></p>
+    <p align="center"><img src="images/ledMap.png" alt="Schematic showing the LED connections on the XIAO board" border="5" width="400"/></p>
   </li>
 </ol>
 
@@ -178,15 +258,15 @@ We created the necessary connections using two methods:
 <ol>
   <li>
     Set <code>03oos_openwsn</code> as the active project by right-clicking its name in the "Project Explorer".
-    <p align="center"><img src="images/seg_SetProj.png" alt="Setting the active project in Segger Embedded Studio" border="5"/></p>
+    <p align="center"><img src="images/seg_SetProj.png" alt="Setting the active project in Segger Embedded Studio" border="5" width="600"/></p>
   </li>
   <li>
     Compile the project: <strong>Build -> Build 03oos_openwsn</strong>.
-    <p align="center"><img src="images/seg_Build.png" alt="Build menu in Segger Embedded Studio" border="5"/></p>
+    <p align="center"><img src="images/seg_Build.png" alt="Build menu in Segger Embedded Studio" border="5" width="400"/></p>
   </li>
   <li>
     Program the device: <strong>Target -> Connect J-Link</strong>, then <strong>Target -> Download 03oos_openwsn</strong>.
-    <p align="center"><img src="images/seg_Prog.png" alt="Programming menu in Segger Embedded Studio" border="5"/></p>
+    <p align="center"><img src="images/seg_Prog.png" alt="Programming menu in Segger Embedded Studio" border="5" width="400"/></p>
   </li>
 </ol>
 
@@ -201,11 +281,11 @@ Incoming UART messages are parsed within <code>openserial.c</code> using a set o
 </p>
 <p align="center">
   Flags<br>
-  <img src="images/hdlcFlags.png" alt="Code snippet of HDLC flags" border="5"/>
+  <img src="images/hdlcFlags.png" alt="Code snippet of HDLC flags" border="5" width="600"/>
 </p>
 <p align="center">
   cmdBytes<br>
-  <img src="images/openserialFlags.png" alt="Code snippet of openserial command bytes" border="5"/>
+  <img src="images/openserialFlags.png" alt="Code snippet of openserial command bytes" border="5"width="600" />
 </p>
 <p>
 Valid messages must be preceded by an <code>HDLC_FLAG</code>, begin with a valid command byte, followed by the payload, and be terminated with a second <code>HDLC_FLAG</code>.
