@@ -10,7 +10,6 @@
 
 /**
  * @file teensy40_serial_parser_mqtt.ino
- * @author Your Name
  * @brief This program uses a non-blocking state machine in the main loop to
  * parse sensor data and send it via MQTT without interruption.
  * @version 14.1 - Re-assigned LTE modem to Serial1
@@ -20,7 +19,8 @@
 // --- Protocol and Timing Constants ---
 const char* SYNC_KEYWORD = "uinject";
 const int KEYWORD_LEN = 7;
-const int PAYLOAD_LEN = 9; // 2 (data) + 2 (ID) + 5 (counter)
+// PAYLOAD_LEN now 4: 2 (data) + 2 (ID)
+const int PAYLOAD_LEN = 4;
 
 const long SEND_INTERVAL = 10000; // 10 seconds in milliseconds
 unsigned long previousSendTime = 0;
@@ -29,7 +29,6 @@ unsigned long previousSendTime = 0;
 struct MessageData {
   byte id[2];
   uint16_t data;
-  uint64_t counter;
 };
 
 // --- Global Variables for State Machine ---
@@ -46,7 +45,7 @@ byte payloadBuffer[PAYLOAD_LEN];
 
 // --- Function Prototypes ---
 void parsePayload();
-void updateDataStore(const byte id[2], uint16_t data, uint64_t counter);
+void updateDataStore(const byte id[2], uint16_t data);
 void printDataStore();
 void sendDataOverLTE();
 void readLTESerial();
@@ -117,26 +116,20 @@ void loop() {
 void parsePayload() {
   uint16_t dataValue = ((uint16_t)payloadBuffer[1] << 8) | (uint16_t)payloadBuffer[0];
   byte idValue[2] = {payloadBuffer[2], payloadBuffer[3]};
-  uint64_t counterValue = 0;
-  for (int i = 4; i >= 0; --i) {
-    counterValue = (counterValue << 8) | (uint64_t)payloadBuffer[4 + i];
-  }
-  updateDataStore(idValue, dataValue, counterValue);
+  updateDataStore(idValue, dataValue);
   printDataStore();
 }
 
-void updateDataStore(const byte id[2], uint16_t data, uint64_t counter) {
+void updateDataStore(const byte id[2], uint16_t data) {
   for (int i = 0; i < dataStoreCount; ++i) {
     if (memcmp(dataStore[i].id, id, 2) == 0) {
       dataStore[i].data = data;
-      dataStore[i].counter = counter;
       return;
     }
   }
   if (dataStoreCount < MAX_IDS) {
     memcpy(dataStore[dataStoreCount].id, id, 2);
     dataStore[dataStoreCount].data = data;
-    dataStore[dataStoreCount].counter = counter;
     dataStoreCount++;
   }
 }
@@ -198,8 +191,12 @@ void sendDataOverLTE() {
   delay(10000);
   readLTESerial();
 
-  Serial.println("Connecting to MQTT broker...");
-  SERIAL_LTE.write("AT+SQNSMQTTCONNECT=0,\"35.199.178.152\",1883,60\r");
+  Serial.println("  Sending: AT+SQNSMQTTCFG=..."); // Configure MQTT client ID and secret
+  SERIAL_NEKTAR.write("AT+SQNSMQTTCFG=0,\"F0f66bb0-1a81-11f0-8ae5-17fa5f753f9b\",\"dxfMug4KeZvKgIldXGWj\"\r");
+  delayAndReadSerial(2000);
+
+  Serial.println("  Sending: AT+SQNSMQTTCONNECT=..."); // Connect to MQTT broker
+  SERIAL_NEKTAR.write("AT+SQNSMQTTCONNECT=0,\"35.199.178.152\",1883,60\r");
   delay(5000);
   readLTESerial();
 

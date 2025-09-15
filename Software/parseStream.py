@@ -20,9 +20,10 @@ def main():
             id_dict = {}  # Dictionary to store ID: (data_value, clock_value)
             while True:
                 # Read one byte at a time
-                char = ser.read()
+                char = ser.read(1)
                 if char:
                     buffer += char
+                    print(char.encode())
 
                     # Check for internal keywords
                     for internal_keyword in internal_keywords:
@@ -64,6 +65,7 @@ def main():
                                         print("\nCurrent ID List:")
                                         for k, v in id_dict.items():
                                             print(f"ID: {k} | Data: {v['data_bytes']} ({v['data_value']}) | Clock: {v['clock_bytes']} ({v['clock_value']}) | Time: {v['timestamp']} | MsgLen: {v['msg_length']}")
+                                            print(buffer[start_index:end_index + 1])
                                         print("-" * 40)
 
                                 # Remove the processed message from the buffer

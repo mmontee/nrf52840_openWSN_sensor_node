@@ -138,7 +138,7 @@ A critical aspect of the final transition will be to incorporate appropriate sig
     <li><strong>Idle Power is Key:</strong> The nRF52840's idle power consumption is its largest drawback. At a 0% duty cycle, its presence cuts the node's standby time by more than half, from 347 days to 149 days.</li>
     <li><strong>High-Duty Cycle Operation:</strong> As the data recording frequency increases, the power consumption of the Teensy processor becomes the dominant factor, and the relative impact of the nRF52840 diminishes.</li>
     <li><strong>Ultra-Low Power Potential:</strong> A simplified sensor node consisting of only the XIAO nRF52840 demonstrates the potential for extremely long-term deployments, lasting an estimated <strong>260 days</strong> on the same 10,000 mAh battery.</li>
-</ul>
+</ul>ssss
 
 <h4>Root Node: Designed for Function over Efficiency</h4>
 <p>The Root Node hardware is configured for constant availability and processing power rather than battery longevity. Its battery life is extremely limited.</p>
