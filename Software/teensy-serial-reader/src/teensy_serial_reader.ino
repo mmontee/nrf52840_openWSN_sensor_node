@@ -163,12 +163,10 @@ void sendDataOverLTE() {
   
   Serial.println("\n--- Preparing to send data to ThingsBoard ---");
 
-  String telemetryKey = "sensor_data";
-  String jsonPayload = "{\"" + telemetryKey + "\":{";
-
+  String jsonPayload = "{";
   for (int i = 0; i < dataStoreCount; i++) {
-      char id_hex_buffer[6];
-      sprintf(id_hex_buffer, "%02X:%02X", dataStore[i].id[0], dataStore[i].id[1]);
+      char id_hex_buffer[5];
+      sprintf(id_hex_buffer, "%02X%02X", dataStore[i].id[0], dataStore[i].id[1]);
       jsonPayload += "\"";
       jsonPayload += id_hex_buffer;
       jsonPayload += "\":";
@@ -177,13 +175,12 @@ void sendDataOverLTE() {
           jsonPayload += ",";
       }
   }
-  jsonPayload += "}}";
+  jsonPayload += "}";
 
   Serial.print("Constructed ThingsBoard JSON: ");
   Serial.println(jsonPayload);
 
-  String publishCmd = "AT+SQNSMQTTPUBLISH=0,\"v1/devices/me/telemetry\","
-                      + String(jsonPayload.length()) + ",0,0\r";
+  String publishCmd = "AT+SQNSMQTTPUBLISH=0,\"v1/devices/me/telemetry\"," + String(jsonPayload.length()) + ",0,0\r";
 
   // --- AT Command Sequence ---
   Serial.println("Waking up LTE module...");

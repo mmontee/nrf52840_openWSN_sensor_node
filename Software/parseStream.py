@@ -23,7 +23,8 @@ def main():
                 char = ser.read(1)
                 if char:
                     buffer += char
-                    print(char.encode())
+                    if(char != b'\x13' and char != b'\x11'):
+                    	print(char)
 
                     # Check for internal keywords
                     for internal_keyword in internal_keywords:
